@@ -12,7 +12,6 @@ from matplotlib import pyplot as plt
 #  numpy 1.14.0 
 
 
-
 class Class_TwoTube(object):
 	def __init__(self, L1, L2, A1, A2, rg0=0.95, rl0=0.9 ,sampling_rate=48000):
 		# initalize Tube length and Tube area
