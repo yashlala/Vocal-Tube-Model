@@ -14,12 +14,14 @@ from matplotlib import pyplot as plt
 
 class Class_TwoTube(object):
 	def __init__(self, L1, L2, A1, A2, rg0=0.95, rl0=0.9 ,sampling_rate=48000):
+		C0=35000.0  # speed of sound in air, round 35000 cm/second
+
 		# initalize Tube length and Tube area
 		self.L1= L1 # set list of 1st tube's length by unit is [cm]
 		self.A1= A1 # set list of 1st tube's area by unit is [cm^2]
 		self.L2= L2 # set list of 2nd tube's length by unit is [cm]
 		self.A2= A2 # set list of 2nd tube's area by unit is [cm^2]
-		C0=35000.0  # speed of sound in air, round 35000 cm/second
+		
 		self.sr= sampling_rate
 		self.tu1=self.L1 / C0   # delay time in 1st tube
 		self.tu2=self.L2 / C0   # delay time in 2nd tube
@@ -94,37 +96,3 @@ class Class_TwoTube(object):
 			y2tm[tc0]= (1 + self.rl0) * yb1[-1]
 
 		return y2tm
-
-if __name__ == '__main__':
-	
-	# Length & Area value, from problems 3.8 in "Digital Processing of Speech Signals" by L.R.Rabiner and R.W.Schafer
-	#
-	# /a/
-	L1_a=9.0    # set list of 1st tube's length by unit is [cm]
-	A1_a=1.0    # set list of 1st tube's area by unit is [cm^2]
-	L2_a=8.0    # set list of 2nd tube's length by unit is [cm]
-	A2_a=7.0    # set list of 2nd tube's area by unit is [cm^2]
-	# /ae/
-	L1_ae=4.0    # set list of 1st tube's length by unit is [cm]
-	A1_ae=1.0    # set list of 1st tube's area by unit is [cm^2]
-	L2_ae=13.0   # set list of 2nd tube's length by unit is [cm]
-	A2_ae=8.0    # set list of 2nd tube's area by unit is [cm^2]
-	# /i/
-	L1_i=9.0    # set list of 1st tube's length by unit is [cm]
-	A1_i=8.0    # set list of 1st tube's area by unit is [cm^2]
-	L2_i=6.0    # set list of 2nd tube's length by unit is [cm]
-	A2_i=1.0    # set list of 2nd tube's area by unit is [cm^2]
-	# /u/
-	L1_u=10.0   # set list of 1st tube's length by unit is [cm]
-	A1_u=7.0    # set list of 1st tube's area by unit is [cm^2]
-	L2_u=7.0    # set list of 2nd tube's length by unit is [cm]
-	A2_u=3.0    # set list of 2nd tube's area by unit is [cm^2]
-	
-	# insatnce
-	twotube_a  =  Class_TwoTube(L1_a,L2_a,A1_a,A2_a)
-	twotube_ae =  Class_TwoTube(L1_ae,L2_ae,A1_ae,A2_ae)
-	twotube_i  =  Class_TwoTube(L1_i,L2_i,A1_i,A2_i)
-	twotube_u  =  Class_TwoTube(L1_u,L2_u,A1_u,A2_u)
-	
-	
-#This file uses TAB

@@ -69,20 +69,3 @@ class Class_HPF(object):
 		for f in bands:
 			amp.append(self.fone(f))
 		return   np.log10(amp) * 20, bands # = amp value, freq list
-
-
-
-if __name__ == '__main__':
-	
-	# instance
-	hpf=Class_HPF()
-	
-	# draw frequecny response
-	plt.xlabel('Hz')
-	plt.ylabel('dB')
-	plt.title('High Pass Filter')
-	amp, freq=hpf.H0(freq_high=5000, Band_num=256)
-	plt.plot(freq, amp)
-	plt.show()
-	
-#This file uses TAB
