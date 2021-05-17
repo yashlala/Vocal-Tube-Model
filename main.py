@@ -29,7 +29,7 @@ if __name__ == '__main__':
 	hpf=Class_HPF()
 
 	fig = plt.figure()
-	fig_rows = 5
+	fig_rows = len(config["tube_values"])
 	fig_cols = 2
 
 	i = 1
