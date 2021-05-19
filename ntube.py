@@ -13,9 +13,7 @@ from matplotlib import pyplot as plt
 
 
 class Class_NTube(object):
-	def __init__(self, tube_props, rg0=0.95, rl0=0.9 ,sampling_rate=48000):
-		C0=35000.0  # speed of sound in air, round 35000 cm/second
-
+	def __init__(self, tube_props, rg0, rl0 ,sampling_rate, C0):
 		self.tube_props = tube_props
 		self.sr= sampling_rate
 

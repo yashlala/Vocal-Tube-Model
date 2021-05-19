@@ -14,7 +14,7 @@ def plot_freq_res(twotube, label, glo, hpf):
 
 def plot_waveform(twotube, label, glo, hpf):
 	# you can get longer input source to set bigger repeat_num 
-	yg_repeat=glo.make_N_repeat(repeat_num=50) # input source of two tube model
+	yg_repeat=glo.get_output() # input source of two tube model
 	y2tm=twotube.process(yg_repeat)
 	yout=hpf.iir1(y2tm)
 	plt.xlabel('mSec')
@@ -23,7 +23,7 @@ def plot_waveform(twotube, label, glo, hpf):
 	plt.plot( (np.arange(len(yout)) * 1000.0 / glo.sr) , yout)
 	return yout
 
-def save_wav( yout, wav_path, sampling_rate=48000):
+def save_wav( yout, wav_path, sampling_rate):
     data = ( yout * 2 ** 15).astype(np.int16)
     #data = np.tile(data, 1000)
     wavwrite(os.path.join("generated_wavform", wav_path), sampling_rate, data)

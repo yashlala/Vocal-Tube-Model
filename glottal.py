@@ -14,13 +14,14 @@ from matplotlib import pyplot as plt
 
 
 class Class_Glottal(object):
-	def __init__(self, tclosed=5.0, trise=6.0, tfall=2.0, sampling_rate=48000):
+	def __init__(self, tclosed, trise, tfall, sampling_rate):
 		# initalize
 		self.tclosed=tclosed  # duration time of close state [mSec]
 		self.trise=trise      # duration time of opening [mSec]
 		self.tfall=tfall      # duration time of closing [mSec]
 		self.sr= sampling_rate
 		self.yg=self.make_one_plus()
+		self.yg_repeat = self.make_N_repeat()
 		
 	def make_one_plus(self,):
 		# output yg
@@ -39,11 +40,14 @@ class Class_Glottal(object):
 				yg[t0]= np.cos( ( np.pi / ( 2.0 * self.N3 )) * ( t0 - (self.N2 + self.N1) )  )
 		return yg
 
-	def make_N_repeat(self, repeat_num=3):
-		yg_repeat=np.zeros( len(self.yg) * repeat_num)
+	def make_N_repeat(self, repeat_num=200):
+		self.yg_repeat=np.zeros( len(self.yg) * repeat_num)
 		for loop in range( repeat_num):
-			yg_repeat[len(self.yg)*loop:len(self.yg)*(loop+1)]= self.yg
-		return  yg_repeat
+			self.yg_repeat[len(self.yg)*loop:len(self.yg)*(loop+1)]= self.yg
+		return self.yg_repeat
+
+	def get_output(self):
+		return self.yg_repeat
 	
 	def fone(self, f):
 		# calculate one point of frequecny response
