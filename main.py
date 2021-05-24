@@ -20,13 +20,13 @@ if __name__ == "__main__":
         config = json.load(f)
     params = config["parameters"]
 
-    glo = Class_Glottal(
+    glo = Glottal(
         params["glottal_tclosed"],
         params["glottal_trise"],
         params["glottal_tfall"],
         params["sampling_rate"],
     )
-    hpf = Class_HPF(params["hpf_fc"], params["sampling_rate"])
+    hpf = HPF(params["hpf_fc"], params["sampling_rate"])
 
     fig = plt.figure()
     fig_rows = len(config["tube_values"])
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     output_waveforms["source"] = glo.yg_repeat.tolist()
     save_wav(glo.yg_repeat, "source" + ".wav", params["sampling_rate"])
     for (key, val) in config["tube_values"].items():
-        twotube = Class_NTube(
+        twotube = NTube(
             val, params["rg0"], params["rl0"], params["sampling_rate"], params["C0"]
         )
 
@@ -62,6 +62,3 @@ if __name__ == "__main__":
     }
     with open("output.json", "w") as f:
         json.dump(output, f)
-
-    # fig.tight_layout()
-    # plt.show()

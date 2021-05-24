@@ -12,8 +12,7 @@ from matplotlib import pyplot as plt
 #  numpy 1.14.0
 #  matplotlib  2.1.1
 
-
-class Class_HPF(object):
+class HPF(object):
     def __init__(self, fc, sampling_rate):
         # initalize
         self.fc = fc  # cut off frequency of High Pass Filter by unit is [Hz]

@@ -1,7 +1,6 @@
-# coding:utf-8
-
 #
-# Two Tube Model, A python Class to calculate frequecny response and procee reflection transmission of resonance tube
+# Two Tube Model, A python Class to calculate frequecny response and procee
+# reflection transmission of resonance tube
 #
 
 import numpy as np
@@ -11,8 +10,7 @@ from matplotlib import pyplot as plt
 #  Python 3.6.4 on win32 (Windows 10)
 #  numpy 1.14.0
 
-
-class Class_NTube(object):
+class NTube(object):
     def __init__(self, tube_props, rg0, rl0, sampling_rate, C0):
         self.tube_props = tube_props
         self.sr = sampling_rate

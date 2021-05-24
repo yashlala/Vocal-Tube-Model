@@ -1,5 +1,3 @@
-# coding:utf-8
-
 # glottal voice source as input of Two Tubes Model of vocal tract
 # Glottal Volume Velocity
 # based on A.E.Rosenberg's formula as Glottal Volume Velocity
@@ -12,8 +10,7 @@ from matplotlib import pyplot as plt
 #  numpy 1.14.0
 #  matplotlib  2.1.1
 
-
-class Class_Glottal(object):
+class Glottal(object):
     def __init__(self, tclosed, trise, tfall, sampling_rate):
         # initalize
         self.tclosed = tclosed  # duration time of close state [mSec]
