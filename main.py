@@ -29,30 +29,33 @@ if __name__ == '__main__':
 
 	i = 1
 
-	output_waveforms = {}
+	#output_waveforms = {}
 
-	output_waveforms["source"] = glo.yg_repeat.tolist()
+	#output_waveforms["source"] = glo.yg_repeat.tolist()
 	save_wav(glo.yg_repeat, 'source' + '.wav', params["sampling_rate"])
 	for (key, val) in config["tube_values"].items():
+		print(int((i-1)/2), end=' ')
 		twotube = Class_NTube(val, params["rg0"], params["rl0"], params["sampling_rate"], params["C0"])
 
 		#plt.subplot(fig_rows,fig_cols,i)
-		plot_freq_res(twotube, '/' + key + '/', glo, hpf)
+		#plot_freq_res(twotube, '/' + key + '/', glo, hpf)
 		#plt.subplot(fig_rows,fig_cols,i+1)
 		yout = plot_waveform(twotube, '/' + key + '/', glo, hpf)
 		
-		output_waveforms[key] = yout.tolist()
+		#output_waveforms[key] = yout.tolist()
 
-		save_wav(yout, 'yout_' + key + '.wav', params["sampling_rate"])  # save generated waveform as a wav file
+		save_wav(yout, key + '.wav', params["sampling_rate"])  # save generated waveform as a wav file
 
 		i += 2
 
+	"""
 	output = {
 		"sampling_rate": params["sampling_rate"],
 		"output_waveforms": output_waveforms
 	}
 	with open('output.json', 'w') as f:
 		json.dump(output, f)
+	"""
 
 	#fig.tight_layout()
 	#plt.show()

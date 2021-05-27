@@ -24,7 +24,7 @@ def plot_waveform(twotube, label, glo, hpf):
 	return yout
 
 def save_wav( yout, wav_path, sampling_rate):
-    data = ( yout * 2 ** 15).astype(np.int16)
-    #data = np.tile(data, 1000)
-    wavwrite(os.path.join("generated_wavform", wav_path), sampling_rate, data)
+    #data = ( yout * 2 ** 15).astype(np.int16)
+    data = yout
+    wavwrite(os.path.join("auto_generated", wav_path), sampling_rate, data)
     print ('save ', wav_path)

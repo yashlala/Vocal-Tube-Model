@@ -40,7 +40,7 @@ class Class_Glottal(object):
 				yg[t0]= np.cos( ( np.pi / ( 2.0 * self.N3 )) * ( t0 - (self.N2 + self.N1) )  )
 		return yg
 
-	def make_N_repeat(self, repeat_num=200):
+	def make_N_repeat(self, repeat_num=30):
 		self.yg_repeat=np.zeros( len(self.yg) * repeat_num)
 		for loop in range( repeat_num):
 			self.yg_repeat[len(self.yg)*loop:len(self.yg)*(loop+1)]= self.yg
