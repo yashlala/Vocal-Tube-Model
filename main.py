@@ -1,17 +1,19 @@
-# coding:utf-8
-
-#
 # two tube model, draw frequency response and waveform, considering glottal
 # voice source and mouth radiation save generated waveform as a wav file
+# Length & Area value, from problems 3.8 in "Digital Processing of Speech
+# Signals" by L.R.Rabiner and R.W.Schafer
+
+
+import json
 
 import numpy as np
 from matplotlib import pyplot as plt
-import json
+from scipy.io.wavfile import write as wavwrite
 
-from ntube import *
-from glottal import *
-from HPF import *
-from utils import *
+from ntube import NTube
+from glottal import Glottal
+from high_pass_filter import HPF
+
 
 if __name__ == "__main__":
     # Length & Area value, from problems 3.8 in "Digital Processing of Speech
