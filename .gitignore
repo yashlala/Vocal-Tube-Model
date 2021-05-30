@@ -1,10 +1,3 @@
-/tube/
-*.bat
-*.pyc
-*.md~
-*.py~
-*.*~
-*.pdf
-generated_wavform/
 __pycache__/
-data/
+*.wav
+output.json
