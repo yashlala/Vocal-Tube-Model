@@ -3,7 +3,6 @@
 # Length & Area value, from problems 3.8 in "Digital Processing of Speech
 # Signals" by L.R.Rabiner and R.W.Schafer
 
-
 import json
 
 import numpy as np
@@ -63,51 +62,47 @@ def save_wav(waveform, file_path, sampling_rate):
 
 
 if __name__ == "__main__":
-    with open("config.json", "r") as f:
-        config = json.load(f)
-    params = config["parameters"]
+
+    sampling_rate = 48000
 
     # Define our Glottal emitter. This models the "source" of the sound.
     # As per the source-filter model, its frequency should not significantly
     # affect the pitch of the resulting sound (although this remains to be
     # confirmed). We keep it constant for all vowel runs.
-    glo = Glottal(
-        params["glottal_tclosed"],
-        params["glottal_trise"],
-        params["glottal_tfall"],
-        params["sampling_rate"],
-    )
+    glo = Glottal(tclosed=2.5, trise=3.0, tfall=1.0, sampling_rate=sampling_rate)
 
     # Define our high-pass filter. This models the transformations that occur
     # to sounds as/after they are leaving the human mouth. We don't optimize
     # over these parameters, either.
-    hpf = HPF(params["hpf_fc"], params["sampling_rate"])
+    hpf = HPF(fc=2000, sampling_rate=sampling_rate)
+
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    params = config["parameters"]
 
     output_waveforms = {}
 
     # Save the unfiltered output of the generator -- ie. just the sound of the
     # glottal generator.
     output_waveforms["source"] = glo.yg_repeat.tolist()
-    save_wav(glo.yg_repeat, "source.wav", params["sampling_rate"])
+    save_wav(glo.yg_repeat, "source.wav", sampling_rate)
 
     # Test out various parameters of the N-tube model component.
-    for (key, val) in config["tube_values"].items():
+    for (vowel_name, val) in config["tube_values"].items():
 
         # Define our N-tube component. This transforms the output of our
         # glottal emitter, modelling the way that sounds are transformed inside
         # the vocal tract. We optimize over these parameters.
-        twotube = NTube(
-            val, params["rg0"], params["rl0"], params["sampling_rate"], params["C0"]
-        )
+        twotube = NTube(val, params["rg0"], params["rl0"], sampling_rate, params["C0"])
 
         # Generate the final output waveform using all three model components.
         y_out = gen_waveform(twotube, glo, hpf)
-        output_waveforms[key] = y_out.tolist()
-        save_wav(y_out, key + ".wav", params["sampling_rate"])
+        output_waveforms[vowel_name] = y_out.tolist()
+        save_wav(y_out, vowel_name + ".wav", sampling_rate)
 
     # Save the output waveforms in JSON format. Who needs `.wav`?
     output = {
-        "sampling_rate": params["sampling_rate"],
+        "sampling_rate": sampling_rate,
         "output_waveforms": output_waveforms,
     }
     with open("output.json", "w") as f:
