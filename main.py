@@ -3,8 +3,6 @@
 # Length & Area value, from problems 3.8 in "Digital Processing of Speech
 # Signals" by L.R.Rabiner and R.W.Schafer
 
-import json
-
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.io.wavfile import write as wavwrite
@@ -12,19 +10,6 @@ from scipy.io.wavfile import write as wavwrite
 from ntube import NTube
 from glottal import Glottal
 from high_pass_filter import HPF
-
-
-def gen_waveform(twotube, glo, hpf):
-    """Generate a sonic waveform given model components.
-
-    Arguments:
-        - A glottal model (simulates source).
-        - A 2-tube model (simulates filter).
-        - A high-pass filter model (simulates post-mouth).
-    """
-    yg_repeat = glo.get_output()
-    y2tm = twotube.process(yg_repeat)
-    return hpf.iir1(y2tm)
 
 
 def save_wav(waveform, file_path, sampling_rate):
@@ -36,38 +21,26 @@ def save_wav(waveform, file_path, sampling_rate):
     wavwrite(file_path, sampling_rate, waveform_data)
 
 
-# TODO: pull out of the parameters out of JSON form.
-#       Just loop over them in this script.
-#
-# godknowswhat_parameters =  {
-#         "rg0": 0.95,
-#         "rl0": 0.9,
-#         "sampling_rate": 48000,
-#         "C0": 35000.0,
-#         "glottal_tclosed": 2.5,
-#         "glottal_trise": 3.0,
-#         "glottal_tfall": 1.0,
-#         "hpf_fc": 2000
-#         }
-#
-# 	"tube_values" : {
-# 		"random": [[5, 1], [4, 2]],
-# 		"a": [[9, 1], [8, 7]],
-# 		"ae": [[4, 1], [13, 8]],
-# 		"i": [[9, 8], [6, 1]],
-# 		"u": [[10, 7], [7, 3]],
-# 		"o": [[9, 1], [8, 7], [5.6, 3]]
-# 	}
-# }
+def generate_waveform(tubes):
+    """Generate a sonic waveform, then pass it through arbitrary tubes.
 
+    Some model parameters are fixed -- they are hardcoded into this method.
+    The arguments to this method are designed to be optimized over.
 
-if __name__ == "__main__":
+    Arguments:
+        - tubes: A list of "tubes". Each tube is a 2-tuple of the form
+                 (tube_length, tube_cross_sectional_area).
+
+    Returns:
+        - An output waveform.
+        - The sampling rate of the output waveform.
+    """
     # Some fixed hyperparameters for our model.
-    # What do they do? Who knows. Look below.
     sampling_rate = 48000
     rg0 = 0.95
     rl0 = 0.9
-    C0 = 35000.0 # TODO: is this the speed of sound?
+    v_sound = 35000.0  # Speed of sound in cm/s.
+    hpf_cutoff_frequency = 2000
 
     # Define our Glottal emitter. This models the "source" of the sound.
     # As per the source-filter model, its frequency should not significantly
@@ -78,40 +51,26 @@ if __name__ == "__main__":
     # Define our high-pass filter. This models the transformations that occur
     # to sounds as/after they are leaving the human mouth. We don't optimize
     # over these parameters, either.
-    hpf = HPF(fc=2000, sampling_rate=sampling_rate)
-
-    with open("config.json", "r") as f:
-        config = json.load(f)
-    params = config["parameters"]
-
-    output_waveforms = {}
+    hpf = HPF(cutoff_frequency=hpf_cutoff_frequency, sampling_rate=sampling_rate)
 
     # Save the unfiltered output of the generator -- ie. just the sound of the
     # glottal generator.
     output_waveforms["source"] = glo.yg_repeat.tolist()
     save_wav(glo.yg_repeat, "source.wav", sampling_rate)
 
-    # Test out various parameters of the N-tube model component.
-    for (vowel_name, tube_props) in config["tube_values"].items():
+    # Represent the tube parameters of our N-tube model
+    tube_props = []
+    for len_, area in zip(tube_lengths, tube_areas):
+        tube_props.append((len_, area))
 
-        # Define our N-tube component. This transforms the output of our
-        # glottal emitter, modelling the way that sounds are transformed inside
-        # the vocal tract. We optimize over these parameters.
-        # TODO: ask ravit what C0 is/does.
-        # TODO: ask ravit what the 2-tuple is in every tube_prop. Area and
-        #       length, maybe?
-        twotube = NTube(tube_props=tube_props, rg0=rg0, rl0=rl0, C0=C0,
-                sampling_rate=sampling_rate)
+    # Define our N-tube component. This transforms the output of our
+    # glottal emitter, modelling the way that sounds are transformed inside
+    # the vocal tract. We optimize over these parameters.
+    # TODO: ask ravit what the 2-tuple is in every tube_prop. Area and
+    #       length, maybe?
+    ntube = NTube(
+        tube_props=tube_props, rg0=rg0, rl0=rl0, C0=v_sound, sampling_rate=sampling_rate
+    )
 
-        # Generate the final output waveform using all three model components.
-        y_out = gen_waveform(twotube, glo, hpf)
-        output_waveforms[vowel_name] = y_out.tolist()
-        save_wav(y_out, vowel_name + ".wav", sampling_rate)
-
-    # Save the output waveforms in JSON format. Who needs `.wav`?
-    output = {
-        "sampling_rate": sampling_rate,
-        "output_waveforms": output_waveforms,
-    }
-    with open("output.json", "w") as f:
-        json.dump(output, f)
+    # Generate the final output waveform by chaining all three components.
+    return hpf.iir1(ntube.process(glo.get_output())), sampling_rate

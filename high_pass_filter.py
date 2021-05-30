@@ -17,9 +17,9 @@ class HPF(object):
 
     I hope.
     """
-    def __init__(self, fc, sampling_rate):
+    def __init__(self, cutoff_frequency, sampling_rate):
         # initalize
-        self.fc = fc  # cut off frequency of High Pass Filter by unit is [Hz]
+        self.fc = cutoff_frequency  # cut off frequency of High Pass Filter by unit is [Hz]
         self.sr = sampling_rate
         self.a, self.b = self.hpf1()
 
