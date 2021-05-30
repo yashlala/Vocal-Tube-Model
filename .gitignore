@@ -1,4 +1,5 @@
 __pycache__/
 *.wav
 output.json
+.ipynb_checkpoints/
 generated_sounds/
