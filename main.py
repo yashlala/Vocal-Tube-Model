@@ -30,6 +30,7 @@ def generate_waveform(tubes):
     Arguments:
         - tubes: A list of "tubes". Each tube is a 2-tuple of the form
                  (tube_length, tube_cross_sectional_area).
+                 TODO: verify I haven't switched these with Ravit.
 
     Returns:
         - An output waveform.
@@ -43,25 +44,17 @@ def generate_waveform(tubes):
     hpf_cutoff_frequency = 2000
 
     # Define our Glottal emitter. This models the "source" of the sound.
-    # As per the source-filter model, its frequency should not significantly
-    # affect the pitch of the resulting sound (although this remains to be
-    # confirmed). We keep it constant for all vowel runs.
     glo = Glottal(tclosed=2.5, trise=3.0, tfall=1.0, sampling_rate=sampling_rate)
 
-    # Define our high-pass filter. This models the transformations that occur
-    # to sounds as/after they are leaving the human mouth. We don't optimize
-    # over these parameters, either.
-    hpf = HPF(cutoff_frequency=hpf_cutoff_frequency, sampling_rate=sampling_rate)
-
-    # Represent the tube parameters of our N-tube model
-    # Define our N-tube component. This transforms the output of our
-    # glottal emitter, modelling the way that sounds are transformed inside
-    # the vocal tract. We optimize over these parameters.
-    # TODO: ask ravit what the 2-tuple is in every tube_prop. Area and
-    #       length, maybe?
+    # Define our N-tube component. This transforms the output of our glottal
+    # emitter.
     ntube = NTube(
         tube_props=tubes, rg0=rg0, rl0=rl0, C0=v_sound, sampling_rate=sampling_rate
     )
+
+    # Define our high-pass filter. This mimics the transformation of sound
+    # after leaving the mouth.
+    hpf = HPF(cutoff_frequency=hpf_cutoff_frequency, sampling_rate=sampling_rate)
 
     # Generate the final output waveform by chaining all three components.
     return hpf.iir1(ntube.process(glo.get_output())), sampling_rate
