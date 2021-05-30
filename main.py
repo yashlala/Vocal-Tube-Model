@@ -54,17 +54,13 @@ def generate_waveform(tubes):
     hpf = HPF(cutoff_frequency=hpf_cutoff_frequency, sampling_rate=sampling_rate)
 
     # Represent the tube parameters of our N-tube model
-    tube_props = []
-    for len_, area in zip(tube_lengths, tube_areas):
-        tube_props.append((len_, area))
-
     # Define our N-tube component. This transforms the output of our
     # glottal emitter, modelling the way that sounds are transformed inside
     # the vocal tract. We optimize over these parameters.
     # TODO: ask ravit what the 2-tuple is in every tube_prop. Area and
     #       length, maybe?
     ntube = NTube(
-        tube_props=tube_props, rg0=rg0, rl0=rl0, C0=v_sound, sampling_rate=sampling_rate
+        tube_props=tubes, rg0=rg0, rl0=rl0, C0=v_sound, sampling_rate=sampling_rate
     )
 
     # Generate the final output waveform by chaining all three components.
