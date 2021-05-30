@@ -4,14 +4,18 @@
 
 import numpy as np
 
+
 class HPF(object):
     """Defines a high pass filter.
 
     I hope.
     """
+
     def __init__(self, cutoff_frequency, sampling_rate):
         # initalize
-        self.fc = cutoff_frequency  # cut off frequency of High Pass Filter by unit is [Hz]
+        self.fc = (
+            cutoff_frequency  # cut off frequency of High Pass Filter by unit is [Hz]
+        )
         self.sr = sampling_rate
         self.a, self.b = self.hpf1()
 

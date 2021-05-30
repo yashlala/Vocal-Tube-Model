@@ -4,6 +4,7 @@
 
 import numpy as np
 
+
 class Glottal(object):
     def __init__(self, tclosed, trise, tfall, sampling_rate):
         # initalize

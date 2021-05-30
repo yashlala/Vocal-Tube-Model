@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 from scipy.io.wavfile import write as wavwrite
 import scipy.optimize
 
-from ntube import NTubeFilter
-from glottal import Glottal
+from n_tube_filter import NTubeFilter
+from glottal_source import Glottal
 from high_pass_filter import HPF
 from metrics import mse_loss, dtw_loss
 
@@ -30,8 +30,8 @@ def generate_waveform(tube_parameters):
     The arguments to this method are designed to be optimized over.
 
     Arguments:
-        - tubes: A list of "tubes". Each tube is a 2-tuple of the form
-                 (tube_length (cm), tube_cross_sectional_area (cm^2)).
+        - tube_parameters: A list of "tubes". Each tube is a 2-tuple of the
+               form (tube_length (cm), tube_cross_sectional_area (cm^2)).
 
     Returns:
         - An output waveform.
@@ -50,7 +50,11 @@ def generate_waveform(tube_parameters):
     # Define our N-tube component. This transforms the output of our glottal
     # emitter.
     ntube = NTubeFilter(
-        tube_props=tubes, rg0=rg0, rl0=rl0, C0=v_sound, sampling_rate=sampling_rate
+        tube_props=tube_parameters,
+        rg0=rg0,
+        rl0=rl0,
+        C0=v_sound,
+        sampling_rate=sampling_rate,
     )
 
     # Define our high-pass filter. This mimics the transformation of sound
@@ -61,13 +65,13 @@ def generate_waveform(tube_parameters):
     return hpf.iir1(ntube.process(glo.get_output())), sampling_rate
 
 
-def find_optimal_parameters(target_waveform, loss_function):
+def find_optimal_parameters(target_waveform, loss_function, fft_cutoff):
     """Find the 2-tube model that best mimicks the target waveform."""
 
     def gen_waveform_wrapper(x):
         t1_len, t1_area, t2_len, t2_area = x
-        generated_waveform = gen_waveform(((t1_len, t1_area), (t2_len, t2_area)))
-        return loss_function(target_waveform, generated_waveform)
+        generated_waveform = generate_waveform(((t1_len, t1_area), (t2_len, t2_area)))
+        return loss_function(target_waveform, generated_waveform, fft_cutoff)
 
     res = scipy.optimize.minimize(gen_waveform_wrapper, (1, 1, 1, 1))
     assert res.success, res.message

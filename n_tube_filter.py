@@ -5,6 +5,7 @@
 
 import numpy as np
 
+
 class NTubeFilter(object):
     def __init__(self, tube_props, rg0, rl0, C0, sampling_rate):
         """A N-tube sonic filter.
