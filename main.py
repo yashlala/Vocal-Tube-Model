@@ -53,11 +53,6 @@ def generate_waveform(tubes):
     # over these parameters, either.
     hpf = HPF(cutoff_frequency=hpf_cutoff_frequency, sampling_rate=sampling_rate)
 
-    # Save the unfiltered output of the generator -- ie. just the sound of the
-    # glottal generator.
-    output_waveforms["source"] = glo.yg_repeat.tolist()
-    save_wav(glo.yg_repeat, "source.wav", sampling_rate)
-
     # Represent the tube parameters of our N-tube model
     tube_props = []
     for len_, area in zip(tube_lengths, tube_areas):
