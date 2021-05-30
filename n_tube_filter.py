@@ -4,19 +4,17 @@
 #
 
 import numpy as np
-from matplotlib import pyplot as plt
 
-# Check version
-#  Python 3.6.4 on win32 (Windows 10)
-#  numpy 1.14.0
-
-class NTube(object):
+class NTubeFilter(object):
     def __init__(self, tube_props, rg0, rl0, C0, sampling_rate):
         """A N-tube sonic filter.
 
         Parameters:
-            - tube_props: A list of 2-tuples. The ___th and ___th of each tube
-                          for all tubes in the model.
+            - tube_props: A list of 2-tuples. `tube_props[i] = (a, b)` where
+                          `a` is the `i`th tube's length in centimeters, and
+                          `b` is the `i`th tube's cross sectional area in cm^2.
+                          `len(tube_props)` is the number of tubes in the
+                          model.
             - rg0: The reflection coefficient between the Glottis (source) and
                    the first tube.
             - rl0: The reflection coefficient between the last tube and the

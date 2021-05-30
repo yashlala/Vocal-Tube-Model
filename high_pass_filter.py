@@ -1,16 +1,8 @@
-# coding:utf-8
-
 #
 # Convert from Volume Velocity to Sound Pressure using High Pass Filter, for mouth radiation effect
 #
 
 import numpy as np
-from matplotlib import pyplot as plt
-
-# Check version
-#  Python 3.6.4 on win32 (Windows 10)
-#  numpy 1.14.0
-#  matplotlib  2.1.1
 
 class HPF(object):
     """Defines a high pass filter.

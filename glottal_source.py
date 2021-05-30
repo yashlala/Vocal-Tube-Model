@@ -3,12 +3,6 @@
 # based on A.E.Rosenberg's formula as Glottal Volume Velocity
 
 import numpy as np
-from matplotlib import pyplot as plt
-
-# Check version
-#  Python 3.6.4 on win32 (Windows 10)
-#  numpy 1.14.0
-#  matplotlib  2.1.1
 
 class Glottal(object):
     def __init__(self, tclosed, trise, tfall, sampling_rate):
