@@ -11,7 +11,19 @@ from matplotlib import pyplot as plt
 #  numpy 1.14.0
 
 class NTube(object):
-    def __init__(self, tube_props, rg0, rl0, sampling_rate, C0):
+    def __init__(self, tube_props, rg0, rl0, C0, sampling_rate):
+        """A N-tube sonic filter.
+
+        Parameters:
+            - tube_props: A list of 2-tuples. The ___th and ___th of each tube
+                          for all tubes in the model.
+            - rg0: The reflection coefficient between the Glottis (source) and
+                   the first tube.
+            - rl0: The reflection coefficient between the last tube and the
+                   mouth.
+            - sampling_rate: the sampling rate of the input waveforms.
+            - C0: Is this the speed of sound? TODO: Ask Ravit.
+        """
         self.tube_props = tube_props
         self.sr = sampling_rate
 
