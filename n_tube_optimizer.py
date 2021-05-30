@@ -11,7 +11,6 @@ import scipy.optimize
 from n_tube_filter import NTubeFilter
 from glottal_source import Glottal
 from high_pass_filter import HPF
-from metrics import mse_loss, dtw_loss
 
 
 def _save_wav(waveform, file_path, sampling_rate):
@@ -62,15 +61,15 @@ def generate_waveform(tube_parameters):
     hpf = HPF(cutoff_frequency=hpf_cutoff_frequency, sampling_rate=sampling_rate)
 
     # Generate the final output waveform by chaining all three components.
-    return hpf.iir1(ntube.process(glo.get_output())), sampling_rate
+    return np.array(hpf.iir1(ntube.process(glo.get_output()))), sampling_rate
 
 
 def find_optimal_parameters(target_waveform, loss_function, fft_cutoff):
     """Find the 2-tube model that best mimicks the target waveform."""
 
     def gen_waveform_wrapper(x):
-        t1_len, t1_area, t2_len, t2_area = x
-        generated_waveform = generate_waveform(((t1_len, t1_area), (t2_len, t2_area)))
+        # x := t1_len, t1_area, t2_len, t2_area
+        generated_waveform, _ = generate_waveform([(x[0], x[1]), (x[2], x[3])])
         return loss_function(target_waveform, generated_waveform, fft_cutoff)
 
     res = scipy.optimize.minimize(gen_waveform_wrapper, (1, 1, 1, 1))
