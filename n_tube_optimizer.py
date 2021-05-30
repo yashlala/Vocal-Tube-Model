@@ -64,7 +64,7 @@ def generate_waveform(tube_parameters):
     return np.array(hpf.iir1(ntube.process(glo.get_output()))), sampling_rate
 
 
-def find_optimal_parameters(target_waveform, loss_function, fft_cutoff):
+def find_optimal_parameters(target_waveform, loss_function, bounds, fft_cutoff):
     """Find the 2-tube model that best mimicks the target waveform."""
 
     def gen_waveform_wrapper(x):
@@ -72,7 +72,11 @@ def find_optimal_parameters(target_waveform, loss_function, fft_cutoff):
         generated_waveform, _ = generate_waveform([(x[0], x[1]), (x[2], x[3])])
         return loss_function(target_waveform, generated_waveform, fft_cutoff)
 
-    res = scipy.optimize.minimize(gen_waveform_wrapper, (1, 1, 1, 1))
+    initial_guesses = []
+    for lower, upper in bounds:
+        initial_guesses.append((lower + upper) / 2)
+    res = scipy.optimize.minimize(gen_waveform_wrapper, initial_guesses,
+            bounds=bounds)
     assert res.success, res.message
 
     t1_len, t1_area, t2_len, t2_area = res.x
