@@ -85,23 +85,27 @@ if __name__ == "__main__":
 
     output_waveforms = {}
 
-    # Save the unfiltered output of the generator -- ie. just the glottal.
+    # Save the unfiltered output of the generator -- ie. just the sound of the
+    # glottal generator.
     output_waveforms["source"] = glo.yg_repeat.tolist()
     save_wav(glo.yg_repeat, "source.wav", params["sampling_rate"])
+
+    # Test out various parameters of the N-tube model component.
     for (key, val) in config["tube_values"].items():
+
+        # Define our N-tube component. This transforms the output of our
+        # glottal emitter, modelling the way that sounds are transformed inside
+        # the vocal tract. We optimize over these parameters.
         twotube = NTube(
             val, params["rg0"], params["rl0"], params["sampling_rate"], params["C0"]
         )
 
         # Generate the final output waveform using all three model components.
         y_out = gen_waveform(twotube, glo, hpf)
-
         output_waveforms[key] = y_out.tolist()
+        save_wav(y_out, key + ".wav", params["sampling_rate"])
 
-        save_wav(
-            y_out, "yout_" + key + ".wav", params["sampling_rate"]
-        )  # save generated waveform as a wav file
-
+    # Save the output waveforms in JSON format. Who needs `.wav`?
     output = {
         "sampling_rate": params["sampling_rate"],
         "output_waveforms": output_waveforms,
