@@ -1,9 +1,5 @@
-/tube/
-*.bat
-*.pyc
-*.md~
-*.py~
-*.*~
-*.pdf
-
-
+__pycache__/
+*.wav
+output.json
+.ipynb_checkpoints/
+generated_sounds/
