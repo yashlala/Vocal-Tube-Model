@@ -72,12 +72,8 @@ def find_optimal_parameters(target_waveform, loss_function, bounds, fft_cutoff):
         generated_waveform, _ = generate_waveform([(x[0], x[1]), (x[2], x[3])])
         return loss_function(target_waveform, generated_waveform, fft_cutoff)
 
-    initial_guesses = []
-    for lower, upper in bounds:
-        initial_guesses.append((lower + upper) / 2)
-    res = scipy.optimize.minimize(gen_waveform_wrapper, initial_guesses,
-            bounds=bounds)
-    assert res.success, res.message
+    res = scipy.optimize.brute(gen_waveform_wrapper, bounds, Ns=5)
+    print(res)
 
-    t1_len, t1_area, t2_len, t2_area = res.x
+    t1_len, t1_area, t2_len, t2_area = res.x0
     return (t1_len, t1_area), (t2_len, t2_area)
