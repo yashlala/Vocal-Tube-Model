@@ -1,17 +1,15 @@
 # Vocal Tract Tube Model
 
-Forked from [Shun60s' original model](https://github.com/shun60s/Vocal-Tube-Model).
+Forked and adapted from [Shun60s' original model](https://github.com/shun60s/Vocal-Tube-Model).
 
-This repository is a work in progress. Documentation may not be up to date.
+## Project Group
 
-## Related Links
-
-
-- [Vocal Tube Estimation](https://github.com/shun60s/Vocal-Tube-Estimation/):
-   The original author of this repository has also implemented an optimizer
-   over this code.
-
-TODO: take a look through his code as well.
+- Arman Durrani
+- Jacob Levine
+- Justine Lin
+- Ravit Sharma
+- Sasha Kononova
+- Yash Lala
 
 ## License
 
